@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AIGenerateImage – Create</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <nav class="navbar">
+    <a class="brand" href="/">AIGenerateImage</a>
+    <div class="navlinks">
+      <a class="navlink active" href="/">Create</a>
+      <a class="navlink" href="/images.html">My images</a>
+    </div>
+  </nav>
+
+  <main class="create">
+    <form id="form" class="composer" autocomplete="off">
+      <h1>Turn words into images</h1>
+      <label for="prompt">What should it show?</label>
+      <textarea id="prompt" rows="6" maxlength="500" placeholder="A lighthouse on a cliff at dawn, fog rolling in"></textarea>
+      <button type="button" id="surprise" class="linkbtn">Give me an idea</button>
+      <button type="submit" id="go" class="primary">Generate image</button>
+      <p id="msg" role="status" aria-live="polite"></p>
+    </form>
+
+    <section class="preview">
+      <div id="frame" class="frame r-square">
+        <p class="empty">Your image will appear here.<br>Write a description and press Generate image.</p>
+      </div>
+
+      <div id="resultBar" class="resultbar off">
+        <span id="resultMeta"></span>
+        <span class="rb-actions">
+          <a class="small" href="/images.html">View in My images</a>
+          <button type="button" id="resultDownload" class="small">Download</button>
+        </span>
+      </div>
+
+      <div class="options">
+        <fieldset class="opt-style">
+          <legend>Style</legend>
+          <div class="chips" id="styles"></div>
+        </fieldset>
+        <fieldset>
+          <legend>Shape</legend>
+          <div class="seg" id="ratios"></div>
+        </fieldset>
+        <div class="seedbox">
+          <label for="seed" title="Same seed + same prompt gives the same image">Seed</label>
+          <input id="seed" type="number" min="0" max="999999" placeholder="Random" form="form">
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>

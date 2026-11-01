@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AIGenerateImage – My images</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <nav class="navbar">
+    <a class="brand" href="/">AIGenerateImage</a>
+    <div class="navlinks">
+      <a class="navlink" href="/">Create</a>
+      <a class="navlink active" href="/images.html">My images</a>
+    </div>
+  </nav>
+
+  <main class="page">
+    <div class="page-head">
+      <div>
+        <h1>My images</h1>
+        <p id="count" class="sub"></p>
+      </div>
+      <div class="toolbar">
+        <input id="search" type="search" placeholder="Search your prompts">
+        <label class="check"><input type="checkbox" id="favOnly"> Favorites only</label>
+      </div>
+    </div>
+    <div id="grid" class="grid"></div>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
