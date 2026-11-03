@@ -5,6 +5,7 @@ window.fetch = async (...args) => {
   if (res.status === 401 && !location.pathname.endsWith('login.html')) location.href = '/login.html'
   return res
 }
+
 const $ = (s) => document.querySelector(s)
 
 const STYLES = {
@@ -31,6 +32,57 @@ const IDEAS = [
   'A paper boat crossing a puddle that reflects a galaxy',
   'A red train crossing snowy mountains at sunrise',
 ]
+
+const quotaText = (n) => (n === 1 ? '1 image left today.' : `${n} images left today.`)
+
+function initialsOf(name) {
+  const parts = String(name)
+    .split(/[^a-zA-Z0-9]+/)
+    .filter(Boolean)
+  const letters = parts.length > 1 ? parts[0][0] + parts[1][0] : (parts[0] || '?')[0]
+  return letters.toUpperCase()
+}
+
+function addUserBox(me) {
+  const nav = document.querySelector('.navlinks')
+  if (!nav) return
+
+  const wrap = document.createElement('div')
+  wrap.className = 'user-wrap'
+  wrap.innerHTML = `
+    <button type="button" class="avatar" aria-haspopup="true" aria-expanded="false" aria-label="Account menu"></button>
+    <div class="user-menu" role="menu" hidden>
+      <p class="um-name"></p>
+      <button type="button" class="um-item" role="menuitem">Log out</button>
+    </div>`
+  const btn = wrap.querySelector('.avatar')
+  const menu = wrap.querySelector('.user-menu')
+  btn.textContent = initialsOf(me.username)
+  wrap.querySelector('.um-name').textContent = me.username
+
+  const setOpen = (open) => {
+    menu.hidden = !open
+    btn.setAttribute('aria-expanded', String(open))
+  }
+  btn.onclick = (e) => {
+    e.stopPropagation()
+    setOpen(menu.hidden)
+  }
+  document.addEventListener('click', (e) => {
+    if (!wrap.contains(e.target)) setOpen(false)
+  })
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      setOpen(false)
+      btn.focus()
+    }
+  })
+  wrap.querySelector('.um-item').onclick = async () => {
+    await fetch('/api/logout', { method: 'POST' })
+    location.href = '/login.html'
+  }
+  nav.append(wrap)
+}
 
 const slug = (t) =>
   t
@@ -123,7 +175,7 @@ function openLightbox(list, index) {
 }
 
 /* ===================== CREATE PAGE ===================== */
-function initCreate() {
+function initCreate(me) {
   const frame = $('#frame')
   let current = null
 
@@ -149,6 +201,7 @@ function initCreate() {
   const setFrameRatio = (r) => {
     frame.className = 'frame r-' + r
   }
+  if (me) setMsg(quotaText(me.remaining))
 
   $('#ratios').addEventListener('change', () => {
     if (!current) setFrameRatio(val('ratio'))
@@ -223,7 +276,7 @@ function initCreate() {
       current = { url: data.url, filename: slug(prompt) }
       $('#resultMeta').textContent = `Seed ${seed} · click the image to view it full size`
       $('#resultBar').classList.remove('off')
-      setMsg('Done. Saved to My images.')
+      setMsg(`Done. ${quotaText(data.remaining)}`)
     } catch (err) {
       setMsg(err.message, true)
     } finally {
@@ -334,5 +387,13 @@ function initGallery() {
   loadGallery()
 }
 
-if ($('#form')) initCreate()
-if ($('#grid')) initGallery()
+/* ===================== START ===================== */
+;(async function boot() {
+  if (location.pathname.endsWith('login.html')) return
+  const res = await fetch('/api/me')
+  if (!res.ok) return // not logged in: the fetch hook above already sends you to the login page
+  const me = await res.json()
+  addUserBox(me)
+  if ($('#form')) initCreate(me)
+  if ($('#grid')) initGallery()
+})()

@@ -703,3 +703,116 @@ input[type='password']:focus {
   border-color: var(--focus);
   box-shadow: 0 0 0 3px var(--accent-soft);
 }
+[hidden] {
+  display: none !important;
+}
+.field {
+  display: grid;
+  gap: 8px;
+}
+input[type='text'] {
+  width: 100%;
+  font: inherit;
+  font-size: 0.92rem;
+  color: #fff;
+  background: transparent;
+  border: 1px solid grey;
+  border-radius: 8px;
+  padding: 9px 12px;
+}
+input[type='text']:focus {
+  outline: none;
+  border-color: var(--focus);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+.userbox {
+  display: flex;
+  align-items: center;
+  color: #fff;
+  font-size: 0.9rem;
+  margin-left: 6px;
+}
+button.navlink {
+  border: 0;
+  cursor: pointer;
+  font-family: inherit;
+}
+@media (max-width: 600px) {
+  .userbox {
+    display: none;
+  }
+  .navlink {
+    padding: 8px 10px;
+  }
+}
+
+.user-wrap {
+  position: relative;
+  margin-left: 6px;
+}
+.avatar {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.25);
+  background: linear-gradient(135deg, #6a65d8, #4640a5);
+  color: #fff;
+  font:
+    600 0.95rem 'Poppins',
+    sans-serif;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  transition:
+    transform 0.15s,
+    border-color 0.2s,
+    box-shadow 0.2s;
+}
+.avatar:hover {
+  border-color: #fff;
+  box-shadow: 0 4px 14px rgba(85, 80, 188, 0.55);
+}
+.avatar:active {
+  transform: scale(0.94);
+}
+.user-menu {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 12px);
+  min-width: 190px;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 8px;
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.45);
+  z-index: 20;
+}
+.user-menu[hidden] {
+  display: none;
+}
+.um-name {
+  margin: 0;
+  padding: 8px 10px 10px;
+  color: var(--muted);
+  font-size: 0.82rem;
+  border-bottom: 1px solid var(--line);
+  margin-bottom: 6px;
+  word-break: break-all;
+}
+.um-item {
+  width: 100%;
+  text-align: left;
+  background: none;
+  border: 0;
+  color: #fff;
+  font:
+    500 0.9rem 'Poppins',
+    sans-serif;
+  padding: 9px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+.um-item:hover {
+  background: rgba(255, 122, 122, 0.14);
+  color: var(--danger);
+}

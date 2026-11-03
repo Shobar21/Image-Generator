@@ -9,34 +9,81 @@
   <body>
     <nav class="navbar"><a class="brand" href="/">AIGenerateImage</a></nav>
     <main class="login">
-      <form id="loginForm" class="composer">
-        <h1>Welcome</h1>
-        <label for="password">Password</label>
-        <input id="password" type="password" autocomplete="current-password" autofocus />
-        <button type="submit" class="primary">Enter</button>
+      <form id="authForm" class="composer">
+        <h1 id="title">Welcome back</h1>
+        <div class="field">
+          <label for="username">Username</label>
+          <input id="username" type="text" autocomplete="username" autofocus />
+        </div>
+        <div class="field">
+          <label for="password">Password</label>
+          <input id="password" type="password" autocomplete="current-password" />
+        </div>
+        <div class="field" id="inviteBox" hidden>
+          <label for="invite">Invite code</label>
+          <input id="invite" type="text" autocomplete="off" />
+        </div>
+        <button type="submit" id="submit" class="primary">Log in</button>
+        <button type="button" id="switch" class="linkbtn">New here? Create an account</button>
         <p id="msg" role="status" aria-live="polite"></p>
       </form>
     </main>
+
     <script>
-      document.getElementById('loginForm').addEventListener('submit', async (e) => {
+      const $ = (id) => document.getElementById(id)
+      let mode = 'login',
+        inviteRequired = false
+
+      function render() {
+        const signup = mode === 'signup'
+        $('title').textContent = signup ? 'Create your account' : 'Welcome back'
+        $('submit').textContent = signup ? 'Sign up' : 'Log in'
+        $('switch').textContent = signup ? 'Already have an account? Log in' : 'New here? Create an account'
+        $('inviteBox').hidden = !(signup && inviteRequired)
+        $('password').autocomplete = signup ? 'new-password' : 'current-password'
+        $('msg').textContent = ''
+        $('msg').className = ''
+      }
+
+      fetch('/api/config')
+        .then((r) => r.json())
+        .then((c) => {
+          inviteRequired = !!c.inviteRequired
+          render()
+        })
+        .catch(() => {})
+      $('switch').onclick = () => {
+        mode = mode === 'login' ? 'signup' : 'login'
+        render()
+      }
+
+      $('authForm').addEventListener('submit', async (e) => {
         e.preventDefault()
-        const msg = document.getElementById('msg')
+        const msg = $('msg')
         msg.textContent = ''
         msg.className = ''
+        $('submit').disabled = true
         try {
-          const res = await fetch('/api/login', {
+          const res = await fetch('/api/' + mode, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ password: document.getElementById('password').value }),
+            body: JSON.stringify({
+              username: $('username').value,
+              password: $('password').value,
+              invite: $('invite').value,
+            }),
           })
           const data = await res.json()
-          if (!res.ok) throw new Error(data.error || 'Login failed')
+          if (!res.ok) throw new Error(data.error || 'Something went wrong')
           location.href = '/'
         } catch (err) {
           msg.textContent = err.message
           msg.className = 'err'
+        } finally {
+          $('submit').disabled = false
         }
       })
+      render()
     </script>
   </body>
 </html>
