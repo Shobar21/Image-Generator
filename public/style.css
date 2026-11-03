@@ -680,3 +680,26 @@ a.small {
     transform: none;
   }
 }
+.login {
+  max-width: 380px;
+  margin: 12vh auto 0;
+  padding: 0 20px;
+}
+.login .composer {
+  position: static;
+}
+input[type='password'] {
+  width: 100%;
+  font: inherit;
+  font-size: 0.92rem;
+  color: #fff;
+  background: transparent;
+  border: 1px solid grey;
+  border-radius: 8px;
+  padding: 9px 12px;
+}
+input[type='password']:focus {
+  outline: none;
+  border-color: var(--focus);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}

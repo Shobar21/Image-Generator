@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>AIGenerateImage – Login</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <nav class="navbar"><a class="brand" href="/">AIGenerateImage</a></nav>
+    <main class="login">
+      <form id="loginForm" class="composer">
+        <h1>Welcome</h1>
+        <label for="password">Password</label>
+        <input id="password" type="password" autocomplete="current-password" autofocus />
+        <button type="submit" class="primary">Enter</button>
+        <p id="msg" role="status" aria-live="polite"></p>
+      </form>
+    </main>
+    <script>
+      document.getElementById('loginForm').addEventListener('submit', async (e) => {
+        e.preventDefault()
+        const msg = document.getElementById('msg')
+        msg.textContent = ''
+        msg.className = ''
+        try {
+          const res = await fetch('/api/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ password: document.getElementById('password').value }),
+          })
+          const data = await res.json()
+          if (!res.ok) throw new Error(data.error || 'Login failed')
+          location.href = '/'
+        } catch (err) {
+          msg.textContent = err.message
+          msg.className = 'err'
+        }
+      })
+    </script>
+  </body>
+</html>
