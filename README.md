@@ -138,6 +138,3 @@ Open http://localhost:5000, choose **Create an account**, and start generating.
 - The rate limiter on login and generation is in memory, so on serverless hosting it is approximate. The daily limit per user is stored in the database and is the real safeguard.
 - Atlas free tier has 512 MB of storage, which is plenty for a personal project but not unlimited.
 
-## License
-
-For learning and personal use.
